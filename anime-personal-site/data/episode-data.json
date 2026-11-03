@@ -2,7 +2,7 @@
   "siteInfo": {
     "name": "My Anime Site - Personal Catalog",
     "description": "Personal anime viewing catalog with episode tracking",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "lastUpdated": "2026-11-03"
   },
   
@@ -51,6 +51,15 @@
       "thumbnail": "https://cdn.anipixcdn.co/thumbnail/70f8fce29186a5ede9371feb0dc51a8e.jpg",
       "siteLink": "https://anikoto.cz/watch/firefly-wedding-94459",
       "embedBase": "https://doodstream.com/embed.js?id=firefly-wedding-ep"
+    },
+    "attack-on-titan": {
+      "title": "Attack on Titan",
+      "totalEpisodes": 91,
+      "status": "Completed",
+      "genre": "Dark Fantasy",
+      "thumbnail": "https://cdn.anipixcdn.co/thumbnail/3c4b8e7a0d5f6a1b2c3d4e5f6a7b8c9d0e.jpg",
+      "siteLink": "https://anikoto.cz/watch/attack-on-titan-anime",
+      "embedBase": "https://doodstream.com/embed.js?id=aot-ep"
     }
   }
 }
