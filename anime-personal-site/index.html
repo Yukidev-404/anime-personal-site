@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Anime Site - Personal Anime Catalog</title>
+  <style>
+    /* Simple, clean styling - no ads */
+    :root {
+      --bg: #0d0d0d;
+      --fg: #e8e8e8;
+      --muted: #666;
+      --accent: #e91e63;
+      --card: #1a1a1a;
+      --border: #333;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--fg), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    
+    /* Main content */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    /* Anime grid */
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .anime-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .anime-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    
+    .anime-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .anime-card h3 {
+      padding: 1rem;
+      margin: 0;
+      font-size: 1rem;
+      color: var(--fg);
+    }
+    
+    .anime-card p {
+      padding: 0 1rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    
+    /* Controls */
+    .controls {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .controls select,
+    .controls button {
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--muted);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    
+    .controls button:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    
+    /* Search */
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 2.5rem 0.5rem 0.8rem;
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--muted);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .search-box button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px;
+    }
+    
+    .search-box button:hover {
+      color: var(--accent);
+    }
+    
+    /* Status badges */
+    .status {
+      display: inline-block;
+      padding: 2px 6px;
+      background: #444;
+      color: #fff;
+      font-size: 0.7rem;
+      border-radius: 3px;
+      margin-left: 5px;
+    }
+    
+    /* Episodes badge */
+    .episodes {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+    }
+    
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .anime-card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Anime Site</h1>
+    <p>Personal anime catalog & tracking</p>
+  </header>
+  
+  <main>
+    <div class="controls">
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Search anime...">
+        <button>✕</button>
+      </div>
+      <select id="genre-filter" aria-label="Filter by genre">
+        <option value="all">All Anime</option>
+      </select>
+      <select id="status-filter" aria-label="Filter by status">
+        <option value="all">All Statuses</option>
+      </select>
+    </div>
+    
+    <div class="anime-grid" id="anime-grid">
+      <!-- Anime cards injected by JavaScript -->
+    </div>
+    
+    <div class="no-results" id="no-results">
+      Enter anime titles above to get started
+    </div>
+  </main>
+  
+  <script>
+    // Anime data - you can expand this with your favorite anime
+    const animeData = [
+      {
+        "id": "one-piece",
+        "title": "One Piece",
+        "episodes": 1180,
+        "status": "Ongoing",
+        "genre": "Action/Adventure",
+        "link": "https://anikoto.cz/watch/one-piece-odmau",
+        "thumbnail": "https://cdn.anipixcdn.co/thumbnail/83fedd9f4ba7ba74e4774b0ab142b915.jpg"
+      },
+      {
+        "id": "black-clover",
+        "title": "Black Clover",
+        "episodes": 170,
+        "status": "Completed",
+        "genre": "Action/Fantasy",
+        "link": "https://anikoto.cz/watch/black-clover-g7tjy",
+        "thumbnail": "https://cdn.anipixcdn.co/thumbnail/8208974663db80265e9bfe7b222dcb18.jpg"
+      },
+      {
+        "id": " dragon-ball-super",
+        "title": "Dragon Ball Super: Beerus",
+        "episodes": 91,
+        "status": "Ongoing",
+        "genre": "Action",
+        "link": "https://anikoto.cz/watch/dragon-ball-super-beerus-353c1",
+        "thumbnail": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/206814-ARuwrZJAGONN.jpg"
+      },
+      {
+        "id": "overgeared",
+        "title": "Overgeared",
+        "episodes": 12,
+        "status": "Ongoing",
+        "genre": "Isekai",
+        "link": "https://anikoto.cz/watch/overgeared-a487c",
+        "thumbnail": "https://cdn.anipixcdn.co/thumbnail/d6fc82da38d7cfe2684e9db6265b295d.jpg"
+      },
+      {
+        "id": "firefly-wedding",
+        "title": "Firefly Wedding",
+        "episodes": 12,
+        "status": "Ongoing",
+        "genre": "Romance",
+        "link": "https://anikoto.cz/watch/firefly-wedding-94459",
+        "thumbnail": "https://cdn.anipixcdn.co/thumbnail/70f8fce29186a5ede9371feb0dc51a8e.jpg"
+      }
+    ];
+    
+    // Render anime grid
+    function renderGrid(filtered = animeData) {
+      const grid = document.getElementById('anime-grid');
+      const noResults = document.getElementById('no-results');
+      
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+      }
+      
+      grid.innerHTML = '';
+      noResults.style.display = 'none';
+      
+      filtered.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+          <img src="${anime.thumbnail}" alt="${anime.title} thumbnail">
+          <div class="anime-info">
+            <h3>${anime.title}</h3>
+            <p class="genre">${anime.genre}</p>
+            <p class="episodes">Episodes: ${anime.episodes}</p>
+            <p class="status">${anime.status}</p>
+          </div>
+          <a href="${anime.link}" target="_blank" rel="noopener" class="watch-btn">Watch</a>
+        `;
+        grid.appendChild(card);
+      });
+    }
+    
+    // Initial render
+    renderGrid();
+    
+    // Search functionality
+    const searchInput = document.getElementById('search');
+    const searchBtn = document.querySelector('#search + button');
+    const genreFilter = document.getElementById('genre-filter');
+    const statusFilter = document.getElementById('status-filter');
+    
+    // Populate genre filter
+    const allGenres = [...new Set(animeData.map(a => a.genre))];
+    genreFilter.innerHTML = '<option value="all">All Anime</option>';
+    allGenres.forEach(genre => {
+      const option = document.createElement('option');
+      option.value = genre;
+      option.textContent = genre;
+      genreFilter.appendChild(option);
+    });
+    
+    // Populate status filter
+    const allStatuses = [...new Set(animeData.map(a => a.status))];
+    statusFilter.innerHTML = '<option value="all">All Statuses</option>';
+    allStatuses.forEach(status => {
+      const option = document.createElement('option');
+      option.value = status;
+      option.textContent = status;
+      statusFilter.appendChild(option);
+    });
+    
+    // Search and filter
+    function applyFilters() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedGenre = genreFilter.value;
+      const selectedStatus = statusFilter.value;
+      
+      const filtered = animeData.filter(anime => {
+        const matchesSearch = anime.title.toLowerCase().includes(searchTerm);
+        const matchesGenre = selectedGenre === 'all' || anime.genre === selectedGenre;
+        const matchesStatus = selectedStatus === 'all' || anime.status === selectedStatus;
+        return matchesSearch && matchesGenre && matchesStatus;
+      });
+      
+      renderGrid(filtered);
+    }
+    
+    // Event listeners
+    searchInput.addEventListener('input', applyFilters);
+    searchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      applyFilters();
+    });
+    genreFilter.addEventListener('change', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    
+    // Keyboard accessibility
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        searchInput.value = '';
+        applyFilters();
+        searchInput.blur();
+      }
+    });
+  </script>
+</body>
+</html>
