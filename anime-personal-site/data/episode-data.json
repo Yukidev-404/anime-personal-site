@@ -1,0 +1,56 @@
+{
+  "siteInfo": {
+    "name": "My Anime Site - Personal Catalog",
+    "description": "Personal anime viewing catalog with episode tracking",
+    "version": "1.0.0",
+    "lastUpdated": "2026-11-03"
+  },
+  
+  "animeEntries": {
+    "one-piece": {
+      "title": "One Piece",
+      "totalEpisodes": 1180,
+      "status": "Ongoing",
+      "genre": "Action/Adventure",
+      "thumbnail": "https://cdn.anipixcdn.co/thumbnail/83fedd9f4ba7ba74e4774b0ab142b915.jpg",
+      "siteLink": "https://anikoto.cz/watch/one-piece-odmau",
+      "embedBase": "https://doodstream.com/embed.js?id=one-piece-ep"
+    },
+    "black-clover": {
+      "title": "Black Clover",
+      "totalEpisodes": 170,
+      "status": "Completed",
+      "genre": "Action/Fantasy",
+      "thumbnail": "https://cdn.anipixcdn.co/thumbnail/8208974663db80265e9bfe7b222dcb18.jpg",
+      "siteLink": "https://anikoto.cz/watch/black-clover-g7tjy",
+      "embedBase": "https://doodstream.com/embed.js?id=black-clover-ep"
+    },
+    "dragon-ball-super": {
+      "title": "Dragon Ball Super: Beerus",
+      "totalEpisodes": 91,
+      "status": "Ongoing",
+      "genre": "Action",
+      "thumbnail": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/206814-ARuwrZJAGONN.jpg",
+      "siteLink": "https://anikoto.cz/watch/dragon-ball-super-beerus-353c1",
+      "embedBase": "https://doodstream.com/embed.js?id=dragon-ball-super-ep"
+    },
+    "overgeared": {
+      "title": "Overgeared",
+      "totalEpisodes": 12,
+      "status": "Ongoing",
+      "genre": "Isekai",
+      "thumbnail": "https://cdn.anipixcdn.co/thumbnail/d6fc82da38d7cfe2684e9db6265b295d.jpg",
+      "siteLink": "https://anikoto.cz/watch/overgeared-a487c",
+      "embedBase": "https://doodstream.com/embed.js?id=overgeared-ep"
+    },
+    "firefly-wedding": {
+      "title": "Firefly Wedding",
+      "totalEpisodes": 12,
+      "status": "Ongoing",
+      "genre": "Romance",
+      "thumbnail": "https://cdn.anipixcdn.co/thumbnail/70f8fce29186a5ede9371feb0dc51a8e.jpg",
+      "siteLink": "https://anikoto.cz/watch/firefly-wedding-94459",
+      "embedBase": "https://doodstream.com/embed.js?id=firefly-wedding-ep"
+    }
+  }
+}
