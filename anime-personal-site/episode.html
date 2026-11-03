@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch - Episode Player</title>
+  <style>
+    /* Player page styling */
+    :root {
+      --bg: #0d0d0d;
+      --fg: #e8e8e8;
+      --muted: #666;
+      --accent: #e91e63;
+      --card: #1a1a1a;
+      --border: #333;
+      --player-bg: #000;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* Header/Breadcrumb */
+    .breadcrumb {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 0 0;
+      padding: 1rem 1.5rem;
+      width: 100%;
+      max-width: 800px;
+      margin: 0;
+    }
+    
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb a:hover {
+      color: var(--accent);
+    }
+    
+    .breadcrumb span {
+      color: var(--fg);
+      margin-left: 0.5rem;
+    }
+    
+    /* Player container */
+    .player-container {
+      background: var(--player-bg);
+      width: 100%;
+      max-width: 800px;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      flex: 1;
+    }
+    
+    /* Episode info */
+    .episode-info {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      padding: 1rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      width: 100%;
+      max-width: 800px;
+    }
+    
+    /* Navigation */
+    .nav-buttons {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0 0 8px 8px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content center;
+      width: 100%;
+      max-width: 800px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .nav-btn:hover {
+      background: var(--bg);
+      color: var(--fg);
+    }
+    
+    .nav-btn:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    
+    .nav-btn.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    
+    /* Quality buttons */
+    .quality-options {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .quality-btn {
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--muted);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .quality-btn:hover:not(.active) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .quality-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+    
+    /* Info text */
+    .info-text {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin: 1rem 0;
+      max-width: 800px;
+      line-height: 1.5;
+    }
+    
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .quality-btn {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Breadcrumb navigation -->
+  <div class="breadcrumb" role="navigation" aria-label="Episode navigation">
+    <a href="index.html" title="Back to anime list">← Anime List</a>
+    <span id="anime-title">Episode</span>
+    <span id="episode-number">1</span>
+    <span>/</span>
+    <span id="total-episodes">12</span>
+  </div>
+  
+  <div class="episode-info" id="episode-info">
+    Loading episode information...
+  </div>
+  
+  <!-- Player area -->
+  <div class="player-container" id="player-container">
+    <iframe 
+      id="video-player"
+      src="https://doodstream.com/embed.js?id=PLACEHOLDER"
+      frameborder="0"
+      allowfullscreen
+      allowtransparency>
+    </iframe>
+  </div>
+  
+  <div class="nav-buttons" id="nav-buttons">
+    <button class="nav-btn disabled" prev-disabled>Previous Episode</button>
+    <span id="episode-counter">1 / 12</span>
+    <button class="nav-btn next-btn" id="next-btn">Next Episode →</button>
+  </div>
+  
+  <div class="quality-options" id="quality-options">
+    <button class="quality-btn active" data-quality="best">Best Available</button>
+    <button class="quality-btn" data-quality="720p">720p</button>
+    <button class="quality-btn" data-quality="480p">480p</button>
+  </div>
+  
+  <div class="info-text" id="info-text">
+    Video player loaded. Use the quality selector to change resolution. 
+    Click "Next Episode" to continue watching or "Previous Episode" to go back.
+  </div>
+  
+  <script>
+    // Initialize page - will be called with data from index
+    let siteData = null;
+    let currentEpisodeIndex = 0;
+    
+    // DOM elements
+    const videoPlayer = document.getElementById('video-player');
+    const animeTitle = document.getElementById('anime-title');
+    const episodeNumber = document.getElementById('episode-number');
+    const totalEpisodes = document.getElementById('total-episodes');
+    const episodeInfo = document.getElementById('episode-info');
+    const navButtons = document.getElementById('nav-buttons');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = navButtons.querySelector('[prev-disabled]');
+    const qualityOptions = document.getElementById('quality-options');
+    const infoText = document.getElementById('info-text');
+    
+    // Initialize with data from parent page
+    function init(pageData) {
+      siteData = pageData;
+      currentEpisodeIndex = 0;
+      
+      if (!siteData || !siteData.anime) {
+        showError('No anime data found');
+        return;
+      }
+      
+      // Find the anime entry
+      const animeEntry = siteData.anime.find(a => a.id === pageData.animeId);
+      if (!animeEntry) {
+        showError('Anime not found');
+        return;
+      }
+      
+      // Set up episode info
+      animeTitle.textContent = animeEntry.title;
+      totalEpisodes.textContent = animeEntry.totalEpisodes;
+      
+      // Load first episode
+      loadEpisode(1);
+    }
+    
+    // Load a specific episode by number
+    function loadEpisode(episodeNumber) {
+      const epNum = parseInt(episodeNumber);
+      const animeEntry = siteData.anime.find(a => a.id === pageData.animeId);
+      
+      if (!animeEntry || epNum < 1 || epNum > animeEntry.totalEpisodes) {
+        showError('Episode not available');
+        return;
+      }
+      
+      // Update UI
+      document.getElementById('episode-number').textContent = epNum;
+      episodeInfo.textContent = `Watching: ${animeEntry.title} Episode ${epNum} of ${animeEntry.totalEpisodes}`;
+      
+      // Update navigation buttons
+      const prevDisabled = epNum === 1;
+      const nextDisabled = epNum >= animeEntry.totalEpisodes;
+      
+      prevBtn.classList.toggle('disabled', prevDisabled);
+      nextBtn.classList.toggle('disabled', nextDisabled);
+      
+      // Update episode counter in breadcrumb
+      episodeNumber.textContent = epNum;
+      
+      // Set iframe source
+      const embedUrl = animeEntry.episodes.find(ep => ep.number === epNum)?.embed || animeEntry.episodes[0].embed;
+      
+      if (embedUrl) {
+        videoPlayer.src = embedUrl;
+        infoText.textContent = `Playing ${animeEntry.title} Episode ${epNum}. Use quality selector below.`;
+      } else {
+        showError('No embed URL available for this episode');
+      }
+    }
+    
+    // Show next episode
+    function showNextEpisode() {
+      const animeEntry = siteData.anime.find(a => a.id === pageData.animeId);
+      if (!animeEntry) return;
+      
+      currentEpisodeIndex++;
+      if (currentEpisodeIndex >= animeEntry.totalEpisodes) {
+        currentEpisodeIndex = animeEntry.totalEpisodes - 1; // Stay on last episode
+      }
+      
+      loadEpisode(currentEpisodeIndex + 1); // +1 because episode numbers are 1-indexed
+    }
+    
+    // Show previous episode
+    function showPrevEpisode() {
+      const animeEntry = siteData.anime.find(a => a.id === pageData.animeId);
+      if (!animeEntry) return;
+      
+      currentEpisodeIndex--;
+      if (currentEpisodeIndex < 0) {
+        currentEpisodeIndex = 0;
+      }
+      
+      loadEpisode(currentEpisodeIndex + 1);
+    }
+    
+    // Change video quality
+    function changeQuality(quality) {
+      const buttons = qualityOptions.querySelectorAll('.quality-btn');
+      
+      // Remove active from all
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active to selected
+      const selectedBtn = document.querySelector(`.quality-btn[data-quality="${quality}"]`);
+      if (selectedBtn) {
+        selectedBtn.classList.add('active');
+      }
+      
+      // In a full implementation, this would swap the iframe source
+      // for different quality streams. For now, we just update the UI.
+      infoText.textContent = `Quality set to: ${quality}. Video player remembers source.`;
+    }
+    
+    // Show error message
+    function showError(message) {
+      videoPlayer.src = '';
+      animeTitle.textContent = 'Error';
+      totalEpisodes.textContent = '0';
+      episodeNumber.textContent = '?';
+      episodeInfo.innerHTML = `<strong>Error:</strong> ${message}`;
+      navButtons.innerHTML = '';
+      qualityOptions.innerHTML = '';
+      infoText.textContent = message;
+    }
+    
+    // Make functions global for onclick attributes
+    window.loadEpisode = loadEpisode;
+    window.showNextEpisode = showNextEpisode;
+    window.showPrevEpisode = showPrevEpisode;
+    window.changeQuality = changeQuality;
+    
+    // Initial setup - called when page loads with data
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if siteData is already set (loaded via some mechanism)
+      // If not, we'll show a message
+      if (!siteData) {
+        infoText.textContent = 'Episode data loading... Select an anime from the list first.';
+      }
+    });
+  </script>
+</body>
+</html>
